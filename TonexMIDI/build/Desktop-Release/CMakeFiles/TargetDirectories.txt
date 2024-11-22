@@ -1,0 +1,9 @@
+/mnt/hgfs/DevShare/TonexMIDI/build/Desktop-Release/CMakeFiles/TonexMIDI.dir
+/mnt/hgfs/DevShare/TonexMIDI/build/Desktop-Release/CMakeFiles/edit_cache.dir
+/mnt/hgfs/DevShare/TonexMIDI/build/Desktop-Release/CMakeFiles/rebuild_cache.dir
+/mnt/hgfs/DevShare/TonexMIDI/build/Desktop-Release/CMakeFiles/list_install_components.dir
+/mnt/hgfs/DevShare/TonexMIDI/build/Desktop-Release/CMakeFiles/install.dir
+/mnt/hgfs/DevShare/TonexMIDI/build/Desktop-Release/CMakeFiles/install/local.dir
+/mnt/hgfs/DevShare/TonexMIDI/build/Desktop-Release/CMakeFiles/install/strip.dir
+/mnt/hgfs/DevShare/TonexMIDI/build/Desktop-Release/CMakeFiles/TonexMIDI_autogen_timestamp_deps.dir
+/mnt/hgfs/DevShare/TonexMIDI/build/Desktop-Release/CMakeFiles/TonexMIDI_autogen.dir

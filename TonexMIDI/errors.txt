@@ -1,0 +1,1 @@
+:-1: error: No rule to make target '/usr/local/lib/librtmidi.a', needed by 'TonexMIDI'.  Stop.

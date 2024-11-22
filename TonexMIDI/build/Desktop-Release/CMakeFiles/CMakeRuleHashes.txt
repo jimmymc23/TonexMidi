@@ -1,0 +1,4 @@
+# Hashes of file build rules.
+dc419029e444554c25c26d4298342d48 CMakeFiles/TonexMIDI_autogen
+dc419029e444554c25c26d4298342d48 CMakeFiles/TonexMIDI_autogen_timestamp_deps
+399086a1c2a91e0315b33ddf294c455a TonexMIDI_autogen/timestamp
