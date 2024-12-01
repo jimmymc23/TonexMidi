@@ -19,6 +19,8 @@ public:
 private slots:
     void on_openMidiPortButton_clicked();
     void on_midiChannelChanged(int channel);
+    void connect_midi();
+
     void on_bankNumberChanged(int bank);
     void on_subBankSelectionChanged(const QString &subBank);
     void on_presetDialChanged(int value);
@@ -46,7 +48,8 @@ private slots:
     void on_MidQdialChanged(int value);
     void on_MidHzdialChanged(int value);
     void on_TrebleHzdialChanged(int value);
-    void on_PositiondialChanged(int value);
+    // EQ Position eqPositionButton
+    void on_eqPositionButton_clicked();
 
     // Effects buttons
     void on_GateButton_clicked();
@@ -88,6 +91,15 @@ private slots:
     void on_delayFeedbackDialChanged(int value);
     void on_delayMixDialChanged(int value);
 
+    // Mod Controls
+    void on_modTypeChanged(int index);
+    // Mod Position
+    void on_modPositionButton_clicked();
+    // Mod Dials
+    void on_modDial1Changed(int value);
+    void on_modDial2Changed(int value);
+    void on_modDial3Changed(int value);
+    void on_modDial4Changed(int value);
 
 private:
     Ui::MainWindow *ui;
@@ -107,6 +119,8 @@ private:
     bool gatePositionToggleState;
     bool reverbPositionToggleState;
     bool delayPositionToggleState;
+    bool modPositionToggleState;
+    bool eqPositionToggleState;
 
     /// Reverb CCs
     int reverbTimeCC;
@@ -114,11 +128,23 @@ private:
     int reverbColorCC;
     int reverbMixCC;
 
+    /// Delay CCs
     int delayTimeCC;
     int delayFeedbackCC;
     int delayModeCC;
     int delayMixCC;
 
+    /// Mod CCs
+    int modCC1;
+    int modCC2;
+    int modCC3;
+    int modCC4;
+
+    /// Mod Labels
+    QString modlable1;
+    QString modlable2;
+    QString modlable3;
+    QString modlable4;
 };
 
 #endif // MAINWINDOW_H

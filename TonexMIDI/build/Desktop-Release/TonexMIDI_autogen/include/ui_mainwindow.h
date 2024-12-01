@@ -84,13 +84,24 @@ public:
     QWidget *Delay;
     QComboBox *delayTypecomboBox;
     QPushButton *delayPositionButton;
-    QComboBox *dealyModecomboBox;
+    QComboBox *delayModecomboBox;
     QDial *delayFeedbackDial;
     QLabel *label_30;
     QLabel *label_31;
     QLabel *label_32;
     QDial *delayMixDial;
     QDial *delayTimeDial;
+    QWidget *Modulation;
+    QPushButton *modPositionButton;
+    QDial *modDial2;
+    QComboBox *modTypecomboBox;
+    QDial *modDial1;
+    QLabel *Modlabel3;
+    QLabel *Modlabel1;
+    QDial *modDial3;
+    QLabel *Modlabel2;
+    QDial *modDial4;
+    QLabel *Modlabel4;
     QLabel *label_9;
     QDial *CompThreshDial;
     QLabel *label_10;
@@ -115,6 +126,8 @@ public:
     QPushButton *reverbButton;
     QPushButton *delayButton;
     QPushButton *modButton;
+    QPushButton *eqPositionButton;
+    QComboBox *midiDevicecomboBox;
     QMenuBar *menubar;
     QMenu *menuTonex_Midi;
     QStatusBar *statusbar;
@@ -172,6 +185,22 @@ public:
         presetToggleButton = new QPushButton(centralwidget);
         presetToggleButton->setObjectName(QString::fromUtf8("presetToggleButton"));
         presetToggleButton->setGeometry(QRect(200, 120, 80, 31));
+        QPalette palette;
+        QBrush brush(QColor(224, 27, 36, 255));
+        brush.setStyle(Qt::SolidPattern);
+        palette.setBrush(QPalette::Active, QPalette::Button, brush);
+        palette.setBrush(QPalette::Active, QPalette::LinkVisited, brush);
+        QBrush brush1(QColor(239, 239, 239, 255));
+        brush1.setStyle(Qt::SolidPattern);
+        palette.setBrush(QPalette::Inactive, QPalette::Button, brush1);
+        QBrush brush2(QColor(255, 0, 255, 255));
+        brush2.setStyle(Qt::SolidPattern);
+        palette.setBrush(QPalette::Inactive, QPalette::LinkVisited, brush2);
+        QBrush brush3(QColor(153, 193, 241, 255));
+        brush3.setStyle(Qt::SolidPattern);
+        palette.setBrush(QPalette::Disabled, QPalette::Button, brush3);
+        palette.setBrush(QPalette::Disabled, QPalette::LinkVisited, brush2);
+        presetToggleButton->setPalette(palette);
         presetToggleButton->setCheckable(true);
         tunerToggleButton = new QPushButton(centralwidget);
         tunerToggleButton->setObjectName(QString::fromUtf8("tunerToggleButton"));
@@ -368,11 +397,11 @@ public:
         delayPositionButton = new QPushButton(Delay);
         delayPositionButton->setObjectName(QString::fromUtf8("delayPositionButton"));
         delayPositionButton->setGeometry(QRect(100, 40, 111, 23));
-        dealyModecomboBox = new QComboBox(Delay);
-        dealyModecomboBox->addItem(QString());
-        dealyModecomboBox->addItem(QString());
-        dealyModecomboBox->setObjectName(QString::fromUtf8("dealyModecomboBox"));
-        dealyModecomboBox->setGeometry(QRect(480, 10, 101, 23));
+        delayModecomboBox = new QComboBox(Delay);
+        delayModecomboBox->addItem(QString());
+        delayModecomboBox->addItem(QString());
+        delayModecomboBox->setObjectName(QString::fromUtf8("delayModecomboBox"));
+        delayModecomboBox->setGeometry(QRect(480, 10, 101, 23));
         delayFeedbackDial = new QDial(Delay);
         delayFeedbackDial->setObjectName(QString::fromUtf8("delayFeedbackDial"));
         delayFeedbackDial->setGeometry(QRect(370, 60, 101, 91));
@@ -404,6 +433,62 @@ public:
         delayTimeDial->setValue(64);
         delayTimeDial->setNotchesVisible(true);
         tabWidget->addTab(Delay, QString());
+        Modulation = new QWidget();
+        Modulation->setObjectName(QString::fromUtf8("Modulation"));
+        modPositionButton = new QPushButton(Modulation);
+        modPositionButton->setObjectName(QString::fromUtf8("modPositionButton"));
+        modPositionButton->setGeometry(QRect(100, 40, 111, 23));
+        modDial2 = new QDial(Modulation);
+        modDial2->setObjectName(QString::fromUtf8("modDial2"));
+        modDial2->setGeometry(QRect(370, 60, 101, 91));
+        modDial2->setMaximum(127);
+        modDial2->setValue(64);
+        modDial2->setNotchesVisible(true);
+        modTypecomboBox = new QComboBox(Modulation);
+        modTypecomboBox->addItem(QString());
+        modTypecomboBox->addItem(QString());
+        modTypecomboBox->addItem(QString());
+        modTypecomboBox->addItem(QString());
+        modTypecomboBox->addItem(QString());
+        modTypecomboBox->setObjectName(QString::fromUtf8("modTypecomboBox"));
+        modTypecomboBox->setGeometry(QRect(341, 10, 101, 23));
+        modTypecomboBox->setMaxVisibleItems(6);
+        modTypecomboBox->setMinimumContentsLength(1);
+        modDial1 = new QDial(Modulation);
+        modDial1->setObjectName(QString::fromUtf8("modDial1"));
+        modDial1->setGeometry(QRect(240, 60, 101, 91));
+        modDial1->setMaximum(127);
+        modDial1->setValue(64);
+        modDial1->setNotchesVisible(true);
+        Modlabel3 = new QLabel(Modulation);
+        Modlabel3->setObjectName(QString::fromUtf8("Modlabel3"));
+        Modlabel3->setGeometry(QRect(520, 150, 58, 15));
+        Modlabel3->setAlignment(Qt::AlignCenter);
+        Modlabel1 = new QLabel(Modulation);
+        Modlabel1->setObjectName(QString::fromUtf8("Modlabel1"));
+        Modlabel1->setGeometry(QRect(260, 150, 58, 15));
+        Modlabel1->setAlignment(Qt::AlignCenter);
+        modDial3 = new QDial(Modulation);
+        modDial3->setObjectName(QString::fromUtf8("modDial3"));
+        modDial3->setGeometry(QRect(500, 60, 101, 91));
+        modDial3->setMaximum(127);
+        modDial3->setValue(64);
+        modDial3->setNotchesVisible(true);
+        Modlabel2 = new QLabel(Modulation);
+        Modlabel2->setObjectName(QString::fromUtf8("Modlabel2"));
+        Modlabel2->setGeometry(QRect(390, 150, 58, 15));
+        Modlabel2->setAlignment(Qt::AlignCenter);
+        modDial4 = new QDial(Modulation);
+        modDial4->setObjectName(QString::fromUtf8("modDial4"));
+        modDial4->setGeometry(QRect(630, 60, 101, 91));
+        modDial4->setMaximum(127);
+        modDial4->setValue(64);
+        modDial4->setNotchesVisible(true);
+        Modlabel4 = new QLabel(Modulation);
+        Modlabel4->setObjectName(QString::fromUtf8("Modlabel4"));
+        Modlabel4->setGeometry(QRect(650, 150, 58, 15));
+        Modlabel4->setAlignment(Qt::AlignCenter);
+        tabWidget->addTab(Modulation, QString());
         label_9 = new QLabel(centralwidget);
         label_9->setObjectName(QString::fromUtf8("label_9"));
         label_9->setGeometry(QRect(680, 160, 81, 31));
@@ -518,6 +603,12 @@ public:
         modButton = new QPushButton(centralwidget);
         modButton->setObjectName(QString::fromUtf8("modButton"));
         modButton->setGeometry(QRect(650, 450, 80, 23));
+        eqPositionButton = new QPushButton(centralwidget);
+        eqPositionButton->setObjectName(QString::fromUtf8("eqPositionButton"));
+        eqPositionButton->setGeometry(QRect(100, 370, 80, 23));
+        midiDevicecomboBox = new QComboBox(centralwidget);
+        midiDevicecomboBox->setObjectName(QString::fromUtf8("midiDevicecomboBox"));
+        midiDevicecomboBox->setGeometry(QRect(450, 12, 231, 23));
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName(QString::fromUtf8("menubar"));
@@ -533,9 +624,10 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget->setCurrentIndex(3);
+        tabWidget->setCurrentIndex(4);
         reverbTypecomboBox->setCurrentIndex(0);
         delayTypecomboBox->setCurrentIndex(0);
+        modTypecomboBox->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -549,7 +641,7 @@ public:
         label->setText(QCoreApplication::translate("MainWindow", "channel", nullptr));
         presetDialValueLabel->setText(QCoreApplication::translate("MainWindow", "0", nullptr));
         presetToggleButton->setText(QString());
-        tunerToggleButton->setText(QString());
+        tunerToggleButton->setText(QCoreApplication::translate("MainWindow", "Tuner", nullptr));
         presetUpButton->setText(QCoreApplication::translate("MainWindow", "Up", nullptr));
         presetDownButton->setText(QCoreApplication::translate("MainWindow", "Down", nullptr));
 #if QT_CONFIG(whatsthis)
@@ -627,8 +719,8 @@ public:
 
         delayTypecomboBox->setCurrentText(QCoreApplication::translate("MainWindow", "Digital", nullptr));
         delayPositionButton->setText(QCoreApplication::translate("MainWindow", "Delay Position", nullptr));
-        dealyModecomboBox->setItemText(0, QCoreApplication::translate("MainWindow", "Normal", nullptr));
-        dealyModecomboBox->setItemText(1, QCoreApplication::translate("MainWindow", "Ping Pong", nullptr));
+        delayModecomboBox->setItemText(0, QCoreApplication::translate("MainWindow", "Normal", nullptr));
+        delayModecomboBox->setItemText(1, QCoreApplication::translate("MainWindow", "Ping Pong", nullptr));
 
 #if QT_CONFIG(whatsthis)
         delayFeedbackDial->setWhatsThis(QCoreApplication::translate("MainWindow", "Gain", nullptr));
@@ -643,6 +735,31 @@ public:
         delayTimeDial->setWhatsThis(QCoreApplication::translate("MainWindow", "Gain", nullptr));
 #endif // QT_CONFIG(whatsthis)
         tabWidget->setTabText(tabWidget->indexOf(Delay), QCoreApplication::translate("MainWindow", "Delay", nullptr));
+        modPositionButton->setText(QCoreApplication::translate("MainWindow", "Mod Position", nullptr));
+#if QT_CONFIG(whatsthis)
+        modDial2->setWhatsThis(QCoreApplication::translate("MainWindow", "Gain", nullptr));
+#endif // QT_CONFIG(whatsthis)
+        modTypecomboBox->setItemText(0, QCoreApplication::translate("MainWindow", "Chorus", nullptr));
+        modTypecomboBox->setItemText(1, QCoreApplication::translate("MainWindow", "Tremolo", nullptr));
+        modTypecomboBox->setItemText(2, QCoreApplication::translate("MainWindow", "Phaser", nullptr));
+        modTypecomboBox->setItemText(3, QCoreApplication::translate("MainWindow", "Flanger", nullptr));
+        modTypecomboBox->setItemText(4, QCoreApplication::translate("MainWindow", "Rotary", nullptr));
+
+        modTypecomboBox->setCurrentText(QCoreApplication::translate("MainWindow", "Chorus", nullptr));
+#if QT_CONFIG(whatsthis)
+        modDial1->setWhatsThis(QCoreApplication::translate("MainWindow", "Gain", nullptr));
+#endif // QT_CONFIG(whatsthis)
+        Modlabel3->setText(QCoreApplication::translate("MainWindow", "Mod 3", nullptr));
+        Modlabel1->setText(QCoreApplication::translate("MainWindow", "Mod 1", nullptr));
+#if QT_CONFIG(whatsthis)
+        modDial3->setWhatsThis(QCoreApplication::translate("MainWindow", "Gain", nullptr));
+#endif // QT_CONFIG(whatsthis)
+        Modlabel2->setText(QCoreApplication::translate("MainWindow", "Mod 2", nullptr));
+#if QT_CONFIG(whatsthis)
+        modDial4->setWhatsThis(QCoreApplication::translate("MainWindow", "Gain", nullptr));
+#endif // QT_CONFIG(whatsthis)
+        Modlabel4->setText(QCoreApplication::translate("MainWindow", "Mod 4", nullptr));
+        tabWidget->setTabText(tabWidget->indexOf(Modulation), QCoreApplication::translate("MainWindow", "Modulation", nullptr));
         label_9->setText(QCoreApplication::translate("MainWindow", "Comp Threshold", nullptr));
 #if QT_CONFIG(whatsthis)
         CompThreshDial->setWhatsThis(QCoreApplication::translate("MainWindow", "Gain", nullptr));
@@ -669,6 +786,7 @@ public:
         reverbButton->setText(QCoreApplication::translate("MainWindow", "Reverb", nullptr));
         delayButton->setText(QCoreApplication::translate("MainWindow", "Delay", nullptr));
         modButton->setText(QCoreApplication::translate("MainWindow", "Modulation", nullptr));
+        eqPositionButton->setText(QCoreApplication::translate("MainWindow", "EQ Position", nullptr));
         menuTonex_Midi->setTitle(QCoreApplication::translate("MainWindow", "Tonex Midi", nullptr));
     } // retranslateUi
 

@@ -17,10 +17,16 @@ MainWindow::MainWindow(QWidget *parent)
 
     try {
         midiOut = new RtMidiOut();  // Create an RtMidiOut object
+
+        // Open a virtual port with a specific name
+        midiOut->openVirtualPort("TonexMIDI Output");
+
+        std::cout << "Opened virtual MIDI port: TonexMIDI Output" << std::endl;
     } catch (RtMidiError &error) {
         error.printMessage();
         exit(EXIT_FAILURE);
     }
+    connect_midi();
 
     // Connect the MIDI channel spin box
     //connect(ui->midiChannelSpinBox, QOverload<int>::of(&QSpinBox::valueChanged), this, &MainWindow::on_midiChannelChanged);
@@ -42,7 +48,7 @@ MainWindow::MainWindow(QWidget *parent)
     /// Connections are not needed if there's a function for a button - i.e. presetUpButton connection, isnt needed because there's a function for the click.
     /// BUT it does need to be initialized or that function doesn't work.
 
-    //connect(ui->presetComboBox, &QComboBox::currentTextChanged, this, &MainWindow::on_subBankSelectionChanged);
+    connect(ui->presetComboBox, &QComboBox::currentTextChanged, this, &MainWindow::on_subBankSelectionChanged);
 
     // connect the dail preset, to the preset label
     connect(ui->presetDial, QOverload<int>::of(&QDial::valueChanged), this, &MainWindow::on_presetDialChanged);
@@ -59,7 +65,7 @@ MainWindow::MainWindow(QWidget *parent)
     presetToggleState = false;  // Set to "Off" initially
     ui->presetToggleButton->setCheckable(true);  // Ensure the button is checkable
     ui->presetToggleButton->setChecked(presetToggleState);
-    ui->presetToggleButton->setText("Preset Off");  // Set initial label text
+    ui->presetToggleButton->setText("Bypassed");  // Set initial label text
 
     // Initialize the tuner toggle button state
     tunerToggleState = false;  // Set to "Off" initially
@@ -69,7 +75,6 @@ MainWindow::MainWindow(QWidget *parent)
     //connect(ui->tunerToggleButton, &QPushButton::clicked, this, &MainWindow::on_tunerToggleButton_clicked);
 
     //////////////////// Model and TONE CONTROLS
-
     connect(ui->ModelVolumeDial, QOverload<int>::of(&QDial::valueChanged), this, &MainWindow::on_ModelVolumeDialChanged);
     connect(ui->ModelMixDial, QOverload<int>::of(&QDial::valueChanged), this, &MainWindow::on_ModelMixDialChanged);
     connect(ui->CompThreshDial, QOverload<int>::of(&QDial::valueChanged), this, &MainWindow::on_CompThreshDialChanged);
@@ -89,12 +94,16 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->MidQdial, QOverload<int>::of(&QDial::valueChanged), this, &MainWindow::on_MidQdialChanged);
     connect(ui->MidHzdial, QOverload<int>::of(&QDial::valueChanged), this, &MainWindow::on_MidHzdialChanged);
     connect(ui->TrebleHzdial, QOverload<int>::of(&QDial::valueChanged), this, &MainWindow::on_TrebleHzdialChanged);
-    connect(ui->Positiondial, QOverload<int>::of(&QDial::valueChanged), this, &MainWindow::on_PositiondialChanged);
+    // Position eqPositionButton eqPositionToggleState
+    eqPositionToggleState = false;  // Set to "Off" initially
+    ui->eqPositionButton->setCheckable(true);  // Ensure the button is checkable
+    ui->eqPositionButton->setChecked(eqPositionToggleState);
+    ui->eqPositionButton->setText("Before Amp");  // Set initial label text
 
 
-    ////////////////////  END - MODEL and TONE CONTROLS
+////////////////////  END - MODEL and TONE CONTROLS
 
-    ///////////////////// EFFECTS
+///////////////////// EFFECTS
 
     // Toggles - on/off and positions
 
@@ -103,24 +112,20 @@ MainWindow::MainWindow(QWidget *parent)
     ui->GateButton->setChecked(gateToggleState);
     ui->GateButton->setText("Gate Off");  // Set initial label text
 
-
     compToggleState = false;  // Set to "Off" initially
     ui->compButton->setCheckable(true);  // Ensure the button is checkable
     ui->compButton->setChecked(compToggleState);
     ui->compButton->setText("Comp Off");  // Set initial label text
-
 
     reverbToggleState = false;  // Set to "Off" initially
     ui->reverbButton->setCheckable(true);  // Ensure the button is checkable
     ui->reverbButton->setChecked(reverbToggleState);
     ui->reverbButton->setText("Reverb Off");  // Set initial label text
 
-
     delayToggleState = false;  // Set to "Off" initially
     ui->delayButton->setCheckable(true);  // Ensure the button is checkable
     ui->delayButton->setChecked(delayToggleState);
     ui->delayButton->setText("Delay Off");  // Set initial label text
-
 
     modToggleState = false;  // Set to "Off" initially
     ui->modButton->setCheckable(true);  // Ensure the button is checkable
@@ -147,8 +152,13 @@ MainWindow::MainWindow(QWidget *parent)
     ui->delayPositionButton->setChecked(delayPositionToggleState);
     ui->delayPositionButton->setText("Post Amp");  // Set initial label text
 
-///// Compression Dials
+    modPositionToggleState = false;  // Set to "Off" initially
+    ui->modPositionButton->setCheckable(true);  // Ensure the button is checkable
+    ui->modPositionButton->setChecked(modPositionToggleState);
+    ui->modPositionButton->setText("Post Amp");  // Set initial label text
 
+
+///// Compression Dials
     connect(ui->compGainDial, QOverload<int>::of(&QDial::valueChanged), this, &MainWindow::on_compGainDialChanged);
     connect(ui->compAttackDial, QOverload<int>::of(&QDial::valueChanged), this, &MainWindow::on_compAttackDialChanged);
 
@@ -182,13 +192,47 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Delay type select delayTypecomboBox
     connect(ui->delayTypecomboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &MainWindow::on_delayTypeChanged);
-    connect(ui->dealyModecomboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &MainWindow::on_delayModeChanged);
+
+    // Delay Mode
+    connect(ui->delayModecomboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &MainWindow::on_delayModeChanged);
 
     // Dials
     connect(ui->delayTimeDial, QOverload<int>::of(&QDial::valueChanged), this, &MainWindow::on_delayTimeDialChanged);
     connect(ui->delayFeedbackDial, QOverload<int>::of(&QDial::valueChanged), this, &MainWindow::on_delayFeedbackDialChanged);
     connect(ui->delayMixDial, QOverload<int>::of(&QDial::valueChanged), this, &MainWindow::on_delayMixDialChanged);
 
+
+// Modulation
+    // Mod Default CCs -- setup for chorus CC4, not used for chorus.
+    modCC1 = 35;
+    modCC2 = 36;
+    modCC3 = 37;
+    modCC4 = 37;
+
+    // Mod Labels
+    modlable1 = "Rate";
+    modlable2 = "Depth";
+    modlable3 = "Level";
+    modlable4 = "";
+
+    // Set Mod lavels;
+    ui->Modlabel1->setText(modlable1);
+    ui->Modlabel2->setText(modlable2);
+    ui->Modlabel3->setText(modlable3);
+    ui->Modlabel4->setText(modlable4);
+
+    // Disable Dial 4
+    ui->modDial4->setEnabled(false);
+    ui->modDial4->hide();
+
+    // Delay type modTypecomboBox
+    connect(ui->modTypecomboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &MainWindow::on_modTypeChanged);
+
+    // Dials on_modDial1Changed
+    connect(ui->modDial1, QOverload<int>::of(&QDial::valueChanged), this, &MainWindow::on_modDial1Changed);
+    connect(ui->modDial2, QOverload<int>::of(&QDial::valueChanged), this, &MainWindow::on_modDial2Changed);
+    connect(ui->modDial3, QOverload<int>::of(&QDial::valueChanged), this, &MainWindow::on_modDial3Changed);
+    connect(ui->modDial4, QOverload<int>::of(&QDial::valueChanged), this, &MainWindow::on_modDial4Changed);
 
 ///// Final Statements
     std::cout << "Connections setup completed." << std::endl;  // Debug message
@@ -206,7 +250,7 @@ MainWindow::~MainWindow()
     }
 }
 
-void MainWindow::on_openMidiPortButton_clicked()
+void MainWindow::connect_midi()
 {
     if (!midiOut) {
         std::cerr << "MIDI output object not available." << std::endl;
@@ -223,6 +267,7 @@ void MainWindow::on_openMidiPortButton_clicked()
     std::cout << "Available MIDI Output Ports:" << std::endl;
     for (unsigned int i = 0; i < portCount; ++i) {
         std::string portName = midiOut->getPortName(i);
+        ui->midiDevicecomboBox->addItem(QString::fromStdString(portName));
         std::cout << "Port " << i << ": " << portName << std::endl;
     }
 
@@ -230,6 +275,33 @@ void MainWindow::on_openMidiPortButton_clicked()
     try {
         midiOut->openPort(0);  // Opens the first port (you can change this index)
         std::cout << "Opened MIDI port 0: " << midiOut->getPortName(0) << std::endl;
+
+    } catch (RtMidiError &error) {
+        error.printMessage();
+    }
+}
+
+void MainWindow::on_openMidiPortButton_clicked()
+{
+    try {
+        // Get the selected device index from the combo box
+        int selectedDevice = ui->midiDevicecomboBox->currentIndex();
+
+        if (selectedDevice < 0 || selectedDevice >= midiOut->getPortCount()) {
+            std::cerr << "Invalid device selected." << std::endl;
+            return;
+        }
+
+        // Close any previously opened port
+        if (midiOut->isPortOpen()) {
+            midiOut->closePort();
+        }
+
+        // Open the selected MIDI device
+        midiOut->openPort(selectedDevice);
+
+        std::cout << "Connected to MIDI device: " << midiOut->getPortName(selectedDevice) << std::endl;
+
     } catch (RtMidiError &error) {
         error.printMessage();
     }
@@ -239,6 +311,8 @@ void MainWindow::on_midiChannelChanged(int channel)
 {
     midiChannel = channel - 1;  // MIDI channels range from 0-15 internally (user inputs 1-16)
     std::cout << "MIDI Channel set to: " << midiChannel + 1 << std::endl;
+    connect_midi();
+    on_openMidiPortButton_clicked();
 }
 
 void MainWindow::on_bankNumberChanged(int bank)
@@ -295,8 +369,6 @@ void MainWindow::on_presetDownButton_clicked()
 
 }
 
-
-
 void MainWindow::on_presetToggleButton_clicked()
 {
     // Toggle the state using the checked property of the button
@@ -304,9 +376,9 @@ void MainWindow::on_presetToggleButton_clicked()
 
     // Update button text to indicate current state
     if (presetToggleState) {
-        ui->presetToggleButton->setText("Preset On");
+        ui->presetToggleButton->setText("On");
     } else {
-        ui->presetToggleButton->setText("Preset Off");
+        ui->presetToggleButton->setText("Bypassed");
     }
 
     // Prepare the MIDI message for CC#12
@@ -376,7 +448,6 @@ void MainWindow::on_ModelVolumeDialChanged(int value)
     }
 }
 
-
 void MainWindow::on_ModelMixDialChanged(int value)
 {
 
@@ -398,7 +469,6 @@ void MainWindow::on_ModelMixDialChanged(int value)
         std::cerr << "MIDI port is not open." << std::endl;
     }
 }
-
 
 void MainWindow::on_CompThreshDialChanged(int value)
 {
@@ -422,7 +492,6 @@ void MainWindow::on_CompThreshDialChanged(int value)
     }
 }
 
-
 void MainWindow::on_GateThreshDialChanged(int value)
 {
 
@@ -444,7 +513,6 @@ void MainWindow::on_GateThreshDialChanged(int value)
         std::cerr << "MIDI port is not open." << std::endl;
     }
 }
-
 
 void MainWindow::on_GainDialChanged(int value)
 {
@@ -675,29 +743,34 @@ void MainWindow::on_TrebleHzdialChanged(int value)
         std::cerr << "MIDI port is not open." << std::endl;
     }
 }
-
-
-void MainWindow::on_PositiondialChanged(int value)
+////// EQ Position eqPositionButton eqPositionToggleState
+void MainWindow::on_eqPositionButton_clicked()
 {
+    // Toggle the state using the checked property of the button
+    eqPositionToggleState = ui->eqPositionButton->isChecked();
 
-    // Update the preset bank
-    value = ui->Positiondial->value();
-    std::cout << "EQ Position set to: " << value << std::endl;
+    // Update button text to indicate current state
+    if (eqPositionToggleState) {
+        ui->eqPositionButton->setText("Pre Amp");
+    } else {
+        ui->eqPositionButton->setText("Post Amp");
+    }
 
     // Prepare the MIDI message for CC#9
     std::vector<unsigned char> message;
     message.push_back(0xB0 + midiChannel);  // Control Change message, channel
     message.push_back(30);                   // Control Change #30
-    message.push_back(value);
+    message.push_back(eqPositionToggleState ? 127 : 0); // Value = 127 (On) or 0 (Off)
 
     // Send the MIDI message
     if (midiOut && midiOut->isPortOpen()) {
         midiOut->sendMessage(&message);
-        std::cout << "EQ Position: Sent CC#30: " << value << std::endl;
+        std::cout << "EQ Position Button: Sent CC#32: " << (eqPositionToggleState ? "On" : "Off") << std::endl;
     } else {
         std::cerr << "MIDI port is not open." << std::endl;
     }
 }
+
 
 ///////////////////////////////////////////// Tone Control End
 
@@ -1243,7 +1316,6 @@ void MainWindow::on_delayTypeChanged(int index)
 }
 
 //// Delay position
-// Toggle position reverbPositionButton
 void MainWindow::on_delayPositionButton_clicked()
 {
     // Toggle the state using the checked property of the button
@@ -1361,6 +1433,275 @@ void MainWindow::on_delayMixDialChanged(int value)
 }
 
 //////////////////////////////////////////// Delay Tab End
+
+//////////////////////////////////////////// Mod Tab
+
+//
+void MainWindow::on_modTypeChanged(int index)
+{
+    int type = index + 1;
+    int value;
+
+    if (type == 1) {
+
+        // Chorus
+        modCC1 = 35;
+        modCC2 = 36;
+        modCC3 = 37;
+        modCC4 = 37;
+
+        // Mod Labels
+        modlable1 = "Rate";
+        modlable2 = "Depth";
+        modlable3 = "Level";
+        modlable4 = "";
+
+        // Set Mod lavels;
+        ui->Modlabel1->setText(modlable1);
+        ui->Modlabel2->setText(modlable2);
+        ui->Modlabel3->setText(modlable3);
+        ui->Modlabel4->setText(modlable4);
+
+        // Disable Dial 4
+        ui->modDial4->setEnabled(false);
+        ui->modDial4->hide();
+
+    } else if (type == 2) {
+
+        // Tremolo
+        modCC1 = 39;
+        modCC2 = 40;
+        modCC3 = 41;
+        modCC4 = 42;
+
+        // Mod Labels
+        modlable1 = "Rate";
+        modlable2 = "Shape";
+        modlable3 = "Spread";
+        modlable4 = "Level";
+
+        // Set Mod lavels;
+        ui->Modlabel1->setText(modlable1);
+        ui->Modlabel2->setText(modlable2);
+        ui->Modlabel3->setText(modlable3);
+        ui->Modlabel4->setText(modlable4);
+
+        // Disable Dial 4
+        ui->modDial4->setEnabled(true);
+        ui->modDial4->show();
+
+    } else if (type == 3) {
+
+        // Phaser
+        modCC1 = 44;
+        modCC2 = 45;
+        modCC3 = 46;
+
+        // Mod Labels
+        modlable1 = "Rate";
+        modlable2 = "Depth";
+        modlable3 = "Level";
+        modlable4 = "";
+
+        // Set Mod lavels;
+        ui->Modlabel1->setText(modlable1);
+        ui->Modlabel2->setText(modlable2);
+        ui->Modlabel3->setText(modlable3);
+        ui->Modlabel4->setText(modlable4);
+
+        // Disable Dial 4
+        ui->modDial4->setEnabled(false);
+        ui->modDial4->hide();
+
+    } else if (type == 4) {
+
+        // Flanger
+        modCC1 = 48;
+        modCC2 = 49;
+        modCC3 = 50;
+        modCC4 = 51;
+
+        // Mod Labels
+        modlable1 = "Rate";
+        modlable2 = "Depth";
+        modlable3 = "Feedback";
+        modlable4 = "Level";
+
+        // Set Mod lavels;
+        ui->Modlabel1->setText(modlable1);
+        ui->Modlabel2->setText(modlable2);
+        ui->Modlabel3->setText(modlable3);
+        ui->Modlabel4->setText(modlable4);
+
+        // Disable Dial 4
+        ui->modDial4->setEnabled(true);
+        ui->modDial4->show();
+
+    } else if (type == 5) {
+
+        // Rotary
+        modCC1 = 53;
+        modCC2 = 54;
+        modCC3 = 55;
+        modCC4 = 56;
+
+        // Mod Labels
+        modlable1 = "Speed";
+        modlable2 = "Radius";
+        modlable3 = "Spread";
+        modlable4 = "Level";
+
+        // Set Mod lavels;
+        ui->Modlabel1->setText(modlable1);
+        ui->Modlabel2->setText(modlable2);
+        ui->Modlabel3->setText(modlable3);
+        ui->Modlabel4->setText(modlable4);
+
+        // Disable Dial 4
+        ui->modDial4->setEnabled(true);
+        ui->modDial4->show();
+
+    } else {
+        std::cout << "Mod type greater than 5?" << std::endl;
+    }
+    std::cout << modCC1 << modCC2 << modCC3 << modCC4  << std::endl;
+
+    std::vector<unsigned char> message;
+    message.push_back(0xB0 + midiChannel);  // Control Change message, channel
+    message.push_back(33);                   // Control Change #33
+    message.push_back(index);
+
+    // Send the MIDI message
+    if (midiOut && midiOut->isPortOpen()) {
+        midiOut->sendMessage(&message);
+        std::cout << "Delay Type: Sent CC#: " << index << std::endl;
+    } else {
+        std::cerr << "MIDI port is not open." << std::endl;
+    }
+}
+
+// Mod Position
+void MainWindow::on_modPositionButton_clicked()
+{
+    // Toggle the state using the checked property of the button
+    modPositionToggleState = ui->modPositionButton->isChecked();
+
+    // Update button text to indicate current state
+    if (modPositionToggleState) {
+        ui->modPositionButton->setText("Post Amp");
+    } else {
+        ui->modPositionButton->setText("Pre Amp");
+    }
+
+    std::vector<unsigned char> message;
+    message.push_back(0xB0 + midiChannel);  // Control Change message, channel
+    message.push_back(31);                   // Control Change #31
+    message.push_back(modPositionToggleState ? 127 : 0); // Value = 127 (On) or 0 (Off)
+
+    // Send the MIDI message
+    if (midiOut && midiOut->isPortOpen()) {
+        midiOut->sendMessage(&message);
+        std::cout << "Mod Position Button: Sent CC#1: " << (modPositionToggleState ? "Post Amp" : "Pre Amp") << std::endl;
+    } else {
+        std::cerr << "MIDI port is not open." << std::endl;
+    }
+}
+
+// Mod Dial 1
+void MainWindow::on_modDial1Changed(int value)
+{
+
+    // Update the preset bank
+    value = ui->modDial1->value();
+    std::cout << "Mod Dial 1 set to: " << value << std::endl;
+
+    // Prepare the MIDI message
+    std::vector<unsigned char> message;
+    message.push_back(0xB0 + midiChannel);  // Control Change message, channel
+    message.push_back(modCC1);
+    message.push_back(value);
+
+    // Send the MIDI message
+    if (midiOut && midiOut->isPortOpen()) {
+        midiOut->sendMessage(&message);
+        std::cout << "Mod Dial 1: Sent: " << value << std::endl;
+    } else {
+        std::cerr << "MIDI port is not open." << std::endl;
+    }
+}
+
+// Mod Dial 2
+void MainWindow::on_modDial2Changed(int value)
+{
+
+    // Update the preset bank
+    value = ui->modDial2->value();
+    std::cout << "Mod Dial 2 set to: " << value << std::endl;
+
+    // Prepare the MIDI message
+    std::vector<unsigned char> message;
+    message.push_back(0xB0 + midiChannel);  // Control Change message, channel
+    message.push_back(modCC2);
+    message.push_back(value);
+
+    // Send the MIDI message
+    if (midiOut && midiOut->isPortOpen()) {
+        midiOut->sendMessage(&message);
+        std::cout << "Mod Dial 2: Sent: " << value << std::endl;
+    } else {
+        std::cerr << "MIDI port is not open." << std::endl;
+    }
+}
+
+// Mod Dial 3
+void MainWindow::on_modDial3Changed(int value)
+{
+
+    // Update the preset bank
+    value = ui->modDial3->value();
+    std::cout << "Mod Dial 3 set to: " << value << std::endl;
+
+    // Prepare the MIDI message
+    std::vector<unsigned char> message;
+    message.push_back(0xB0 + midiChannel);  // Control Change message, channel
+    message.push_back(modCC3);
+    message.push_back(value);
+
+    // Send the MIDI message
+    if (midiOut && midiOut->isPortOpen()) {
+        midiOut->sendMessage(&message);
+        std::cout << "Mod Dial 3: Sent: " << value << std::endl;
+    } else {
+        std::cerr << "MIDI port is not open." << std::endl;
+    }
+}
+
+// Mod Dial 4
+void MainWindow::on_modDial4Changed(int value)
+{
+
+    // Update the preset bank
+    value = ui->modDial4->value();
+    std::cout << "Mod Dial 4 set to: " << value << std::endl;
+
+    // Prepare the MIDI message
+    std::vector<unsigned char> message;
+    message.push_back(0xB0 + midiChannel);  // Control Change message, channel
+    message.push_back(modCC4);
+    message.push_back(value);
+
+    // Send the MIDI message
+    if (midiOut && midiOut->isPortOpen()) {
+        midiOut->sendMessage(&message);
+        std::cout << "Mod Dial 4: Sent: " << value << std::endl;
+    } else {
+        std::cerr << "MIDI port is not open." << std::endl;
+    }
+}
+
+//////////////////////////////////////////// Mod Tab End
+
+
 
 void MainWindow::updateProgramChange()
 {

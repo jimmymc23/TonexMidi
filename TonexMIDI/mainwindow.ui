@@ -137,6 +137,70 @@
       <height>31</height>
      </rect>
     </property>
+    <property name="palette">
+     <palette>
+      <active>
+       <colorrole role="Button">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>224</red>
+          <green>27</green>
+          <blue>36</blue>
+         </color>
+        </brush>
+       </colorrole>
+       <colorrole role="LinkVisited">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>224</red>
+          <green>27</green>
+          <blue>36</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </active>
+      <inactive>
+       <colorrole role="Button">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>239</red>
+          <green>239</green>
+          <blue>239</blue>
+         </color>
+        </brush>
+       </colorrole>
+       <colorrole role="LinkVisited">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>255</red>
+          <green>0</green>
+          <blue>255</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </inactive>
+      <disabled>
+       <colorrole role="Button">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>153</red>
+          <green>193</green>
+          <blue>241</blue>
+         </color>
+        </brush>
+       </colorrole>
+       <colorrole role="LinkVisited">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>255</red>
+          <green>0</green>
+          <blue>255</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </disabled>
+     </palette>
+    </property>
     <property name="text">
      <string/>
     </property>
@@ -154,7 +218,7 @@
      </rect>
     </property>
     <property name="text">
-     <string/>
+     <string>Tuner</string>
     </property>
     <property name="checkable">
      <bool>true</bool>
@@ -427,7 +491,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>3</number>
+     <number>4</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -888,7 +952,7 @@
        <string>Delay Position</string>
       </property>
      </widget>
-     <widget class="QComboBox" name="dealyModecomboBox">
+     <widget class="QComboBox" name="delayModecomboBox">
       <property name="geometry">
        <rect>
         <x>480</x>
@@ -1020,6 +1084,223 @@
       </property>
       <property name="notchesVisible">
        <bool>true</bool>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="Modulation">
+     <attribute name="title">
+      <string>Modulation</string>
+     </attribute>
+     <widget class="QPushButton" name="modPositionButton">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>40</y>
+        <width>111</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Mod Position</string>
+      </property>
+     </widget>
+     <widget class="QDial" name="modDial2">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>60</y>
+        <width>101</width>
+        <height>91</height>
+       </rect>
+      </property>
+      <property name="whatsThis">
+       <string>Gain</string>
+      </property>
+      <property name="maximum">
+       <number>127</number>
+      </property>
+      <property name="value">
+       <number>64</number>
+      </property>
+      <property name="notchesVisible">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="modTypecomboBox">
+      <property name="geometry">
+       <rect>
+        <x>341</x>
+        <y>10</y>
+        <width>101</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="currentText">
+       <string>Chorus</string>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <property name="maxVisibleItems">
+       <number>6</number>
+      </property>
+      <property name="minimumContentsLength">
+       <number>1</number>
+      </property>
+      <item>
+       <property name="text">
+        <string>Chorus</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Tremolo</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Phaser</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Flanger</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Rotary</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QDial" name="modDial1">
+      <property name="geometry">
+       <rect>
+        <x>240</x>
+        <y>60</y>
+        <width>101</width>
+        <height>91</height>
+       </rect>
+      </property>
+      <property name="whatsThis">
+       <string>Gain</string>
+      </property>
+      <property name="maximum">
+       <number>127</number>
+      </property>
+      <property name="value">
+       <number>64</number>
+      </property>
+      <property name="notchesVisible">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QLabel" name="Modlabel3">
+      <property name="geometry">
+       <rect>
+        <x>520</x>
+        <y>150</y>
+        <width>58</width>
+        <height>15</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Mod 3</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="Modlabel1">
+      <property name="geometry">
+       <rect>
+        <x>260</x>
+        <y>150</y>
+        <width>58</width>
+        <height>15</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Mod 1</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QDial" name="modDial3">
+      <property name="geometry">
+       <rect>
+        <x>500</x>
+        <y>60</y>
+        <width>101</width>
+        <height>91</height>
+       </rect>
+      </property>
+      <property name="whatsThis">
+       <string>Gain</string>
+      </property>
+      <property name="maximum">
+       <number>127</number>
+      </property>
+      <property name="value">
+       <number>64</number>
+      </property>
+      <property name="notchesVisible">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QLabel" name="Modlabel2">
+      <property name="geometry">
+       <rect>
+        <x>390</x>
+        <y>150</y>
+        <width>58</width>
+        <height>15</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Mod 2</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QDial" name="modDial4">
+      <property name="geometry">
+       <rect>
+        <x>630</x>
+        <y>60</y>
+        <width>101</width>
+        <height>91</height>
+       </rect>
+      </property>
+      <property name="whatsThis">
+       <string>Gain</string>
+      </property>
+      <property name="maximum">
+       <number>127</number>
+      </property>
+      <property name="value">
+       <number>64</number>
+      </property>
+      <property name="notchesVisible">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QLabel" name="Modlabel4">
+      <property name="geometry">
+       <rect>
+        <x>650</x>
+        <y>150</y>
+        <width>58</width>
+        <height>15</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Mod 4</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
       </property>
      </widget>
     </widget>
@@ -1439,6 +1720,29 @@
     </property>
     <property name="text">
      <string>Modulation</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="eqPositionButton">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>370</y>
+      <width>80</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>EQ Position</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="midiDevicecomboBox">
+    <property name="geometry">
+     <rect>
+      <x>450</x>
+      <y>12</y>
+      <width>231</width>
+      <height>23</height>
+     </rect>
     </property>
    </widget>
   </widget>
